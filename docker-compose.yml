@@ -1,0 +1,19 @@
+version: "3"
+services:
+  dummy:
+    build: .
+    ports:
+      - "8080:8080"
+  #agent section
+  #docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e DD_API_KEY=XXXX -e DD_SITE="datadoghq.eu" gcr.io/datadoghq/agent:7
+  datadog:
+    image: gcr.io/datadoghq/agent:7
+    links:
+      - dummy
+    environment:
+      - DD_API_KEY=CHANGE_ME #CHANGE THIS VALUE TO SEE IN YOUR DASHBOARD
+      - DD_SITE=datadoghq.eu #Maybe you need to change, depends if your account is from US or EU
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
